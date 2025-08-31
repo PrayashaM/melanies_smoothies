@@ -1,9 +1,7 @@
 # Import python packages
 import streamlit as st
-import requests
 cnx=st.connection("snowflake")
 session=cnx.session()
-
 
 # Write directly to the app
 st.title(":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
@@ -24,16 +22,16 @@ my_dataframe = session.table("smoothies.public.fruit_options").select (col('FRUI
 
 #convert the Snowpark Dataframe to a Pandas Dataframe so we can  use the LOC function
 pd_df=my_dataframe.to_pandas()
-st.dataframe(pd_df)
-st.stop()
+#st.dataframe(pd_df)
+#st.stop()
 
 ingredients_list = st.multiselect ('choose up to 5 ingredients:', my_dataframe, max_selections=5)
 
 if ingredients_list:
     #st.write(ingredients_list)
     #st.write(ingredients_list)
+
     ingredients_string = ''
-  
     for fruit_chosen in ingredients_list:
         ingredients_string += fruit_chosen + ' '
         search_on=pd_df.loc[pd_df['Blueberries'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
@@ -41,7 +39,7 @@ if ingredients_list:
         st.subheader(fruit_chosen + 'Nutrition Information')
         smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + fruit_chosen)
         sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
-      
+
     #st.write(ingredients_string)
 
     my_insert_stmt = """ insert into smoothies.public.orders(ingredients, name_on_order) 
