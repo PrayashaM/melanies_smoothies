@@ -1,7 +1,8 @@
 # Import python packages
 import streamlit as st
-import requests
 from snowflake.snowpark.functions import col
+import requests
+import pandas as pd
 
 # Snowflake connection
 cnx = st.connection("snowflake")
